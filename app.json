@@ -1,0 +1,1315 @@
+{
+  "id": "ai-commercial-insurance-premium-audit",
+  "title": "Premium Audit Intelligence",
+  "tagline": "Exposure collection, classification validation, and defensible premium reconciliation",
+  "industry": "Commercial Insurance Operations",
+  "port": 4519,
+  "accent": "#be123c",
+  "valueLabel": "Premium at audit",
+  "value": "$22.1M",
+  "workflows": [
+    {
+      "id": "intake",
+      "title": "Audit Intake and Scope",
+      "description": "Determine auditable exposures, policy periods, locations, entities, and required evidence.",
+      "fields": [
+        {
+          "key": "policyNumber",
+          "label": "Policy Number",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "insured",
+          "label": "Named Insured",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "line",
+          "label": "Line of Business",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Workers compensation",
+            "General liability",
+            "Commercial auto"
+          ]
+        },
+        {
+          "key": "auditPeriod",
+          "label": "Audit Period",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "policyNumber": "WC-26-184920",
+            "insured": "Named Insured STD-2026-104",
+            "line": "Commercial auto",
+            "auditPeriod": "Audit Period STD-2026-104"
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "policyNumber": "GL-26-771305",
+            "insured": "Named Insured RISK-2026-227",
+            "line": "Commercial auto",
+            "auditPeriod": "Audit Period RISK-2026-227"
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "policyNumber": "WC-26-492118",
+            "insured": "Named Insured EXC-2026-319",
+            "line": "Commercial auto",
+            "auditPeriod": "Audit Period EXC-2026-319"
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "payroll",
+      "title": "Payroll Reconciliation",
+      "description": "Reconcile payroll registers, quarterly filings, general ledger, and reported exposures.",
+      "fields": [
+        {
+          "key": "insured",
+          "label": "Insured",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "state",
+          "label": "State",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "reportedPayroll",
+          "label": "Reported Payroll",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "key": "auditedPayroll",
+          "label": "Audited Payroll",
+          "type": "currency",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "insured": "Insured STD-2026-104",
+            "state": "Pennsylvania",
+            "reportedPayroll": 285000,
+            "auditedPayroll": 285000
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "insured": "Insured RISK-2026-227",
+            "state": "California",
+            "reportedPayroll": 875000,
+            "auditedPayroll": 875000
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "insured": "Insured EXC-2026-319",
+            "state": "Texas",
+            "reportedPayroll": 142500,
+            "auditedPayroll": 142500
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "classification",
+      "title": "Classification Validation",
+      "description": "Evaluate employee duties, locations, governing classifications, and exceptions.",
+      "fields": [
+        {
+          "key": "employeeGroup",
+          "label": "Employee Group",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "currentClass",
+          "label": "Current Class Code",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "proposedClass",
+          "label": "Proposed Class Code",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "dutyDescription",
+          "label": "Duties",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "employeeGroup": "Employee Group STD-2026-104",
+            "currentClass": "Current Class Code STD-2026-104",
+            "proposedClass": "Proposed Class Code STD-2026-104",
+            "dutyDescription": "Complete: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis."
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "employeeGroup": "Employee Group RISK-2026-227",
+            "currentClass": "Current Class Code RISK-2026-227",
+            "proposedClass": "Proposed Class Code RISK-2026-227",
+            "dutyDescription": "Critical exception: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis."
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "employeeGroup": "Employee Group EXC-2026-319",
+            "currentClass": "Current Class Code EXC-2026-319",
+            "proposedClass": "Proposed Class Code EXC-2026-319",
+            "dutyDescription": "Reviewer follow-up: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis."
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "subcontractor",
+      "title": "Subcontractor Exposure Review",
+      "description": "Validate certificates, uninsured costs, labor portions, and policy treatment.",
+      "fields": [
+        {
+          "key": "subcontractor",
+          "label": "Subcontractor",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "contractAmount",
+          "label": "Contract Amount",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "key": "certificateStatus",
+          "label": "Certificate Status",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Valid",
+            "Expired",
+            "Missing",
+            "Excluded"
+          ]
+        },
+        {
+          "key": "laborAmount",
+          "label": "Labor Amount",
+          "type": "currency",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "subcontractor": "Atlas Electrical Services",
+            "contractAmount": 285000,
+            "certificateStatus": "Missing",
+            "laborAmount": 285000
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "subcontractor": "Summit Roofing Partners",
+            "contractAmount": 875000,
+            "certificateStatus": "Missing",
+            "laborAmount": 875000
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "subcontractor": "Cedar Mechanical Group",
+            "contractAmount": 142500,
+            "certificateStatus": "Missing",
+            "laborAmount": 142500
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "sales",
+      "title": "Sales Exposure Reconciliation",
+      "description": "Reconcile reported and audited sales by operation, location, and coverage basis.",
+      "fields": [
+        {
+          "key": "operation",
+          "label": "Operation",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "location",
+          "label": "Location",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "reportedSales",
+          "label": "Reported Sales",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "key": "auditedSales",
+          "label": "Audited Sales",
+          "type": "currency",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "operation": "Operation STD-2026-104",
+            "location": "Location STD-2026-104",
+            "reportedSales": 285000,
+            "auditedSales": 285000
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "operation": "Operation RISK-2026-227",
+            "location": "Location RISK-2026-227",
+            "reportedSales": 875000,
+            "auditedSales": 875000
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "operation": "Operation EXC-2026-319",
+            "location": "Location EXC-2026-319",
+            "reportedSales": 142500,
+            "auditedSales": 142500
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "title": "Audited Premium Calculation",
+      "description": "Calculate exposure changes, rates, modifiers, minimums, and final premium.",
+      "fields": [
+        {
+          "key": "policyNumber",
+          "label": "Policy Number",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "exposureDifference",
+          "label": "Exposure Difference",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "key": "rate",
+          "label": "Rate",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "premiumAdjustment",
+          "label": "Premium Adjustment",
+          "type": "currency",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "policyNumber": "WC-26-184920",
+            "exposureDifference": 285000,
+            "rate": 88,
+            "premiumAdjustment": 285000
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "policyNumber": "GL-26-771305",
+            "exposureDifference": 875000,
+            "rate": 42,
+            "premiumAdjustment": 875000
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "policyNumber": "WC-26-492118",
+            "exposureDifference": 142500,
+            "rate": 67,
+            "premiumAdjustment": 142500
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "dispute",
+      "title": "Premium Dispute Resolution",
+      "description": "Review insured disputes, supporting records, classification arguments, and revisions.",
+      "fields": [
+        {
+          "key": "auditId",
+          "label": "Audit ID",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "disputedAmount",
+          "label": "Disputed Amount",
+          "type": "currency",
+          "required": true
+        },
+        {
+          "key": "disputeReason",
+          "label": "Dispute Reason",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "responseDue",
+          "label": "Response Due",
+          "type": "date",
+          "required": false
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "auditId": "Audit ID STD-2026-104",
+            "disputedAmount": 285000,
+            "disputeReason": "Complete: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "responseDue": "2026-09-08"
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "auditId": "Audit ID RISK-2026-227",
+            "disputedAmount": 875000,
+            "disputeReason": "Critical exception: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "responseDue": "2026-08-19"
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "auditId": "Audit ID EXC-2026-319",
+            "disputedAmount": 142500,
+            "disputeReason": "Reviewer follow-up: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "responseDue": "2026-08-10"
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "title": "Audit Quality Review",
+      "description": "Check evidence completeness, calculations, approvals, and regulatory consistency.",
+      "fields": [
+        {
+          "key": "auditId",
+          "label": "Audit ID",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "auditor",
+          "label": "Auditor",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "qualityIssue",
+          "label": "Quality Issue",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "riskLevel",
+          "label": "Risk Level",
+          "type": "select",
+          "required": false,
+          "options": [
+            "Low",
+            "Moderate",
+            "High",
+            "Critical"
+          ]
+        }
+      ],
+      "states": [
+        "intake",
+        "analyzing",
+        "review",
+        "approved",
+        "closed"
+      ],
+      "examples": [
+        {
+          "id": "standard",
+          "label": "Fill Standard Case",
+          "values": {
+            "auditId": "Audit ID STD-2026-104",
+            "auditor": "Auditor STD-2026-104",
+            "qualityIssue": "Complete: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "riskLevel": "Critical"
+          }
+        },
+        {
+          "id": "high-risk",
+          "label": "Fill High-Risk Case",
+          "values": {
+            "auditId": "Audit ID RISK-2026-227",
+            "auditor": "Auditor RISK-2026-227",
+            "qualityIssue": "Critical exception: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "riskLevel": "Critical"
+          }
+        },
+        {
+          "id": "exception",
+          "label": "Fill Exception Case",
+          "values": {
+            "auditId": "Audit ID EXC-2026-319",
+            "auditor": "Auditor EXC-2026-319",
+            "qualityIssue": "Reviewer follow-up: source evidence, financial impact, control context, and documented reviewer rationale are available for analysis.",
+            "riskLevel": "Critical"
+          }
+        }
+      ],
+      "aiActions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk & Value"
+        },
+        {
+          "id": "evidence",
+          "label": "Build Evidence Checklist"
+        },
+        {
+          "id": "plan",
+          "label": "Recommend Action Plan"
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "id": "intake",
+      "title": "Audit Intake and Scope Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for audit intake and scope.",
+      "table": "op_intake",
+      "columns": [
+        {
+          "key": "policyNumber",
+          "label": "Policy Number",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_policyNumber"
+        },
+        {
+          "key": "insured",
+          "label": "Named Insured",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_insured"
+        },
+        {
+          "key": "line",
+          "label": "Line of Business",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Workers compensation",
+            "General liability",
+            "Commercial auto"
+          ],
+          "dbKey": "data_line"
+        },
+        {
+          "key": "auditPeriod",
+          "label": "Audit Period",
+          "type": "text",
+          "required": false,
+          "dbKey": "data_auditPeriod"
+        }
+      ]
+    },
+    {
+      "id": "payroll",
+      "title": "Payroll Reconciliation Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for payroll reconciliation.",
+      "table": "op_payroll",
+      "columns": [
+        {
+          "key": "insured",
+          "label": "Insured",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_insured"
+        },
+        {
+          "key": "state",
+          "label": "State",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_state"
+        },
+        {
+          "key": "reportedPayroll",
+          "label": "Reported Payroll",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_reportedPayroll"
+        },
+        {
+          "key": "auditedPayroll",
+          "label": "Audited Payroll",
+          "type": "currency",
+          "required": false,
+          "dbKey": "data_auditedPayroll"
+        }
+      ]
+    },
+    {
+      "id": "classification",
+      "title": "Classification Validation Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for classification validation.",
+      "table": "op_classification",
+      "columns": [
+        {
+          "key": "employeeGroup",
+          "label": "Employee Group",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_employeeGroup"
+        },
+        {
+          "key": "currentClass",
+          "label": "Current Class Code",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_currentClass"
+        },
+        {
+          "key": "proposedClass",
+          "label": "Proposed Class Code",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_proposedClass"
+        },
+        {
+          "key": "dutyDescription",
+          "label": "Duties",
+          "type": "textarea",
+          "required": false,
+          "dbKey": "data_dutyDescription"
+        }
+      ]
+    },
+    {
+      "id": "subcontractor",
+      "title": "Subcontractor Exposure Review Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for subcontractor exposure review.",
+      "table": "op_subcontractor",
+      "columns": [
+        {
+          "key": "subcontractor",
+          "label": "Subcontractor",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_subcontractor"
+        },
+        {
+          "key": "contractAmount",
+          "label": "Contract Amount",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_contractAmount"
+        },
+        {
+          "key": "certificateStatus",
+          "label": "Certificate Status",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Valid",
+            "Expired",
+            "Missing",
+            "Excluded"
+          ],
+          "dbKey": "data_certificateStatus"
+        },
+        {
+          "key": "laborAmount",
+          "label": "Labor Amount",
+          "type": "currency",
+          "required": false,
+          "dbKey": "data_laborAmount"
+        }
+      ]
+    },
+    {
+      "id": "sales",
+      "title": "Sales Exposure Reconciliation Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for sales exposure reconciliation.",
+      "table": "op_sales",
+      "columns": [
+        {
+          "key": "operation",
+          "label": "Operation",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_operation"
+        },
+        {
+          "key": "location",
+          "label": "Location",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_location"
+        },
+        {
+          "key": "reportedSales",
+          "label": "Reported Sales",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_reportedSales"
+        },
+        {
+          "key": "auditedSales",
+          "label": "Audited Sales",
+          "type": "currency",
+          "required": false,
+          "dbKey": "data_auditedSales"
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "title": "Audited Premium Calculation Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for audited premium calculation.",
+      "table": "op_premium",
+      "columns": [
+        {
+          "key": "policyNumber",
+          "label": "Policy Number",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_policyNumber"
+        },
+        {
+          "key": "exposureDifference",
+          "label": "Exposure Difference",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_exposureDifference"
+        },
+        {
+          "key": "rate",
+          "label": "Rate",
+          "type": "number",
+          "required": true,
+          "dbKey": "data_rate"
+        },
+        {
+          "key": "premiumAdjustment",
+          "label": "Premium Adjustment",
+          "type": "currency",
+          "required": false,
+          "dbKey": "data_premiumAdjustment"
+        }
+      ]
+    },
+    {
+      "id": "dispute",
+      "title": "Premium Dispute Resolution Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for premium dispute resolution.",
+      "table": "op_dispute",
+      "columns": [
+        {
+          "key": "auditId",
+          "label": "Audit ID",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_auditId"
+        },
+        {
+          "key": "disputedAmount",
+          "label": "Disputed Amount",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_disputedAmount"
+        },
+        {
+          "key": "disputeReason",
+          "label": "Dispute Reason",
+          "type": "textarea",
+          "required": true,
+          "dbKey": "data_disputeReason"
+        },
+        {
+          "key": "responseDue",
+          "label": "Response Due",
+          "type": "date",
+          "required": false,
+          "dbKey": "data_responseDue"
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "title": "Audit Quality Review Register",
+      "description": "Operational records, ownership, status, financial value, and evidence for audit quality review.",
+      "table": "op_quality",
+      "columns": [
+        {
+          "key": "auditId",
+          "label": "Audit ID",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_auditId"
+        },
+        {
+          "key": "auditor",
+          "label": "Auditor",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_auditor"
+        },
+        {
+          "key": "qualityIssue",
+          "label": "Quality Issue",
+          "type": "textarea",
+          "required": true,
+          "dbKey": "data_qualityIssue"
+        },
+        {
+          "key": "riskLevel",
+          "label": "Risk Level",
+          "type": "select",
+          "required": false,
+          "options": [
+            "Low",
+            "Moderate",
+            "High",
+            "Critical"
+          ],
+          "dbKey": "data_riskLevel"
+        }
+      ]
+    },
+    {
+      "id": "policy-portfolio",
+      "title": "Commercial Policy Portfolio",
+      "description": "Policies, lines, periods, estimated premium, and audit method.",
+      "table": "op_policy_portfolio",
+      "columns": [
+        {
+          "key": "policyNumber",
+          "label": "Policy Number",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_policyNumber"
+        },
+        {
+          "key": "line",
+          "label": "Line of Business",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_line"
+        },
+        {
+          "key": "effectiveDate",
+          "label": "Effective Date",
+          "type": "date",
+          "required": true,
+          "dbKey": "data_effectiveDate"
+        },
+        {
+          "key": "estimatedPremium",
+          "label": "Estimated Premium",
+          "type": "currency",
+          "required": true,
+          "dbKey": "data_estimatedPremium"
+        }
+      ]
+    },
+    {
+      "id": "insured-entities",
+      "title": "Insured Entity Registry",
+      "description": "Named insureds, locations, entities, operations, and ownership.",
+      "table": "op_insured_entities",
+      "columns": [
+        {
+          "key": "insured",
+          "label": "Named Insured",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_insured"
+        },
+        {
+          "key": "entityType",
+          "label": "Entity Type",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_entityType"
+        },
+        {
+          "key": "locationCount",
+          "label": "Location Count",
+          "type": "number",
+          "required": true,
+          "dbKey": "data_locationCount"
+        },
+        {
+          "key": "operations",
+          "label": "Operations",
+          "type": "textarea",
+          "required": true,
+          "dbKey": "data_operations"
+        }
+      ]
+    },
+    {
+      "id": "class-code-library",
+      "title": "Classification Code Library",
+      "description": "Class codes, descriptions, states, rates, and underwriting guidance.",
+      "table": "op_class_code_library",
+      "columns": [
+        {
+          "key": "classCode",
+          "label": "Class Code",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_classCode"
+        },
+        {
+          "key": "description",
+          "label": "Description",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_description"
+        },
+        {
+          "key": "state",
+          "label": "State",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_state"
+        },
+        {
+          "key": "baseRate",
+          "label": "Base Rate",
+          "type": "number",
+          "required": true,
+          "dbKey": "data_baseRate"
+        }
+      ]
+    },
+    {
+      "id": "auditor-assignments",
+      "title": "Premium Auditor Assignment Board",
+      "description": "Auditors, territories, capacity, due dates, and quality performance.",
+      "table": "op_auditor_assignments",
+      "columns": [
+        {
+          "key": "auditor",
+          "label": "Auditor",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_auditor"
+        },
+        {
+          "key": "territory",
+          "label": "Territory",
+          "type": "text",
+          "required": true,
+          "dbKey": "data_territory"
+        },
+        {
+          "key": "openAudits",
+          "label": "Open Audits",
+          "type": "number",
+          "required": true,
+          "dbKey": "data_openAudits"
+        },
+        {
+          "key": "qualityScore",
+          "label": "Quality Score",
+          "type": "number",
+          "required": true,
+          "dbKey": "data_qualityScore"
+        }
+      ]
+    }
+  ],
+  "domainProduct": {
+    "home": "Commercial Premium Audit Operations",
+    "context": "Exposure collection, payroll reconciliation, classification, subcontractor evidence, premium adjustment, and insured dispute resolution.",
+    "features": [
+      {
+        "id": "exposure-intake",
+        "title": "Auditable Exposure Intake",
+        "description": "Collect payroll, sales, locations, officers, operations, ownership, and source-document certification by policy period.",
+        "view": "evidence",
+        "modules": [
+          "intake",
+          "insured-entities"
+        ],
+        "actions": [
+          {
+            "id": "accept-exposure",
+            "label": "Accept Certified Exposure",
+            "nextStatus": "Approved",
+            "auditDetail": "Accepted certified exposure data and source-document lineage."
+          },
+          {
+            "id": "request-documents",
+            "label": "Request Missing Documents",
+            "nextStatus": "Investigating",
+            "auditDetail": "Requested missing payroll, sales, or ownership documentation."
+          }
+        ]
+      },
+      {
+        "id": "payroll-reconcile",
+        "title": "Payroll & Ledger Reconciliation",
+        "description": "Tie quarterly payroll reports, tax filings, general ledger, overtime, severance, and officer adjustments.",
+        "view": "reconciliation",
+        "modules": [
+          "payroll",
+          "policy-portfolio"
+        ],
+        "actions": [
+          {
+            "id": "accept-reconciliation",
+            "label": "Accept Payroll Reconciliation",
+            "nextStatus": "Approved",
+            "auditDetail": "Accepted payroll-to-ledger reconciliation and allowable adjustments."
+          },
+          {
+            "id": "open-payroll-variance",
+            "label": "Open Payroll Variance",
+            "nextStatus": "Investigating",
+            "auditDetail": "Opened an unexplained payroll or ledger variance."
+          }
+        ]
+      },
+      {
+        "id": "class-code",
+        "title": "Class Code & Location Audit",
+        "description": "Apply state rules to employee duties, locations, governing classification, standard exceptions, and rate basis.",
+        "view": "control",
+        "modules": [
+          "classification",
+          "class-code-library"
+        ],
+        "actions": [
+          {
+            "id": "approve-classification",
+            "label": "Approve Classification",
+            "nextStatus": "Approved",
+            "auditDetail": "Approved employee and location classifications under state rules."
+          },
+          {
+            "id": "refer-underwriting",
+            "label": "Refer to Underwriting",
+            "nextStatus": "Review",
+            "auditDetail": "Referred material classification or operations change to underwriting."
+          }
+        ]
+      },
+      {
+        "id": "subcontractor-coi",
+        "title": "Subcontractor & COI Review",
+        "description": "Validate subcontract cost, certificate dates, carrier, limits, scope, class, and uninsured exposure treatment.",
+        "view": "deadline",
+        "modules": [
+          "subcontractor",
+          "insured-entities"
+        ],
+        "actions": [
+          {
+            "id": "accept-coi",
+            "label": "Accept Valid Certificate",
+            "nextStatus": "Approved",
+            "auditDetail": "Accepted in-force certificate and excluded supported subcontract exposure."
+          },
+          {
+            "id": "include-uninsured",
+            "label": "Include Uninsured Exposure",
+            "nextStatus": "Review",
+            "auditDetail": "Included unsupported subcontract exposure in the premium basis."
+          }
+        ]
+      },
+      {
+        "id": "premium-adjustment",
+        "title": "Final Premium & Dispute",
+        "description": "Calculate audited exposure, rates, experience modification, endorsements, deposit premium, adjustment, and dispute status.",
+        "view": "board",
+        "modules": [
+          "premium",
+          "auditor-assignments"
+        ],
+        "actions": [
+          {
+            "id": "prepare-final-audit",
+            "label": "Send to Final Audit Review",
+            "nextStatus": "Review",
+            "auditDetail": "Sent the operational record to the governed calculation, evidence, and independent approval workflow."
+          },
+          {
+            "id": "open-insured-dispute",
+            "label": "Open Insured Dispute",
+            "nextStatus": "Investigating",
+            "auditDetail": "Opened insured dispute and preserved challenged classifications and amounts."
+          }
+        ]
+      }
+    ]
+  },
+  "integrations": [
+    {
+      "id": "integration-1",
+      "name": "Policy administration",
+      "category": "Domain data source",
+      "mode": "Read-only demo connector"
+    },
+    {
+      "id": "integration-2",
+      "name": "Payroll document intake",
+      "category": "Domain data source",
+      "mode": "Read-only demo connector"
+    },
+    {
+      "id": "integration-3",
+      "name": "Certificate tracking",
+      "category": "Domain data source",
+      "mode": "Read-only demo connector"
+    },
+    {
+      "id": "integration-4",
+      "name": "Premium billing",
+      "category": "Domain data source",
+      "mode": "Read-only demo connector"
+    },
+    {
+      "id": "integration-5",
+      "name": "Agency management",
+      "category": "Domain data source",
+      "mode": "Read-only demo connector"
+    }
+  ],
+  "featureCount": 40,
+  "seededRecords": 300,
+  "demoUsers": 3,
+  "apiPort": 5519,
+  "dbName": "profit_ai_commercial_insurance_premium_audit"
+}
