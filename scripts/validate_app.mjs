@@ -17,6 +17,9 @@ async function main() {
   assert(app.operations.length === 12, 'expected 12 domain operational tables');
   assert(app.integrations.length >= 5, 'expected domain integrations');
   assert(app.domainProduct?.features?.length === 5, 'expected five native domain capabilities');
+  assert(app.commercialExtension?.milestones?.length >= 4, 'commercial rollout milestones missing');
+  assert(app.commercialExtension?.connectors?.length >= 3, 'commercial connector plan missing');
+  assert(Object.values(app.commercialExtension?.defaults || {}).every(value => Number(value) >= 0), 'commercial scenario defaults invalid');
   assert(new Set(app.domainProduct.features.map(feature => feature.title)).size === 5, 'domain capability titles must be unique');
   for (const feature of app.domainProduct.features) {
     assert(feature.modules.length >= 2, `${feature.id} must combine multiple domain data sources`);
@@ -42,6 +45,8 @@ async function main() {
   assert(frontend.includes('function RichText'), 'professional AI narrative renderer missing');
   assert(frontend.includes('Provider assumption'), 'AI assumption callout missing');
   assert(frontend.includes('DomainCapability'), 'native domain capability UI missing');
+  assert(frontend.includes('function CommercialExtension'), 'commercial extension UI missing');
+  assert(frontend.includes("page==='commercial-extension'"), 'commercial extension navigation missing');
   assert(frontend.includes('Permitted {feature.title} actions'), 'domain decision controls missing');
   for (const component of ['EvidenceCenter','ReconciliationCenter','PremiumCenter','DisputeCenter','Notifications']) assert(frontend.includes(`function ${component}`), `${component} React surface missing`);
   assert(frontend.includes("id:'dashboard'"), 'journey dashboard navigation missing');

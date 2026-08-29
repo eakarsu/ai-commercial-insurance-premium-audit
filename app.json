@@ -7,6 +7,15 @@
   "accent": "#be123c",
   "valueLabel": "Premium at audit",
   "value": "$22.1M",
+  "commercialExtension": {
+    "title": "Premium Recovery & Classification Lab",
+    "summary": "Model premium variance and stage payroll, sales, policy, classification, rate, and dispute evidence.",
+    "baselineLabel": "Annual audited premium", "volumeLabel": "Policies audited", "unitValueLabel": "Average deposit premium", "opportunityRateLabel": "Expected premium variance", "captureRateLabel": "Collectible / return share",
+    "defaults": { "volume": 450, "unitValue": 72000, "opportunityRate": 4.5, "captureRate": 75 },
+    "pricing": "Per completed audit with carrier and audit-firm portfolio tiers; recovery work can use performance pricing.",
+    "milestones": ["Import policy, endorsement, and exposure evidence", "Reconcile payroll, sales, and tax records", "Independently approve classification and calculation", "Issue evidence packet and manage disputes"],
+    "connectors": [{"name":"Policy administration","status":"Pilot","purpose":"Policy terms, endorsements, rates, and deposit premium","evidence":"Effective-dated policy version and source receipt"},{"name":"Payroll and sales evidence","status":"Planned","purpose":"Auditable exposure reconciliation","evidence":"Certified period totals with exception arithmetic"},{"name":"Billing and correspondence","status":"Planned","purpose":"Final audit, return premium, and disputes","evidence":"Issued packet, delivery receipt, and response history"}]
+  },
   "workflows": [
     {
       "id": "intake",
