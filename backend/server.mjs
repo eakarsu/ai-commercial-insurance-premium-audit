@@ -8,6 +8,7 @@ import express from 'express';
 import helmet from 'helmet';
 import jwt from 'jsonwebtoken';
 import pg from 'pg';
+import { mountOperationalRecordActions, recordPermissions } from './operationalRecordActions.mjs';
 
 const backendRoot = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.dirname(backendRoot);
@@ -88,7 +89,7 @@ function normalizedResult(content, workflow, analysisType, providerMeta) {
   };
 }
 
-export async function callOpenRouter(workflow, inputs, analysisType) {
+export async function callOpenRouter(workflow, inputs, analysisType, signal) {
   const status = aiStatus();
   if (!status.configured) {
     const error = new Error('OpenRouter is not configured. Set OPENROUTER_API_KEY, OPENROUTER_MODEL, and OPENROUTER_BASE_URL in .env.');
@@ -102,7 +103,7 @@ export async function callOpenRouter(workflow, inputs, analysisType) {
     method: 'POST',
     headers: { Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`, 'Content-Type': 'application/json', 'HTTP-Referer': `http://127.0.0.1:${process.env.UI_PORT || config.port}`, 'X-OpenRouter-Title': config.title },
     body: JSON.stringify({ model: status.model, messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }], temperature: 0.2, max_tokens: 1200 }),
-    signal: AbortSignal.timeout(60_000),
+    signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(60_000)]) : AbortSignal.timeout(60_000),
   });
   if (!response.ok) {
     const error = new Error(`OpenRouter returned HTTP ${response.status}`);
@@ -228,7 +229,8 @@ export function createApp() {
     res.json({ token: jwt.sign(identity, sessionSecret, { expiresIn: '8h' }), user: identity });
   });
   app.use('/api', auth);
-  app.get('/api/app', (req, res) => res.json({ ...config, user: req.user, ai: aiStatus() }));
+  mountOperationalRecordActions(app, { pool, config, identifier, audit });
+  app.get('/api/app', (req, res) => res.json({ ...config, user: req.user, ai: aiStatus() , recordPermissions: recordPermissions(req.user) }));
   app.get('/api/capabilities', (req, res) => res.json({
     role: req.user.role,
     canOperate: ['admin','operator'].includes(req.user.role),
@@ -539,6 +541,10 @@ export function createApp() {
   app.get('/api/audit-events', async (_req, res) => res.json({ items: (await pool.query('SELECT * FROM audit_events ORDER BY event_time DESC,id DESC LIMIT 100')).rows }));
   app.get('/api/integrations', async (_req, res) => res.json({ items: (await pool.query('SELECT * FROM integration_state ORDER BY name')).rows }));
   app.post('/api/ai/analyze', async (req, res, next) => {
+    const aiRequestController = new AbortController();
+    const onAIRequestClose = () => { if (!res.writableEnded) aiRequestController.abort(); };
+    res.once('close', onAIRequestClose);
+    res.once('finish', () => res.removeListener('close', onAIRequestClose));
     try {
       const workflow = config.workflows.find(item => item.id === req.body?.workflowId);
       const analysisType = String(req.body?.analysisType || 'assess');
@@ -547,8 +553,8 @@ export function createApp() {
       const inputs = req.body?.inputs || {};
       const missing = workflow.fields.filter(field => field.required && !inputs[field.key]).map(field => field.label);
       if (missing.length) return res.status(422).json({ error: 'Complete required fields', missing });
-      res.json(await callOpenRouter(workflow, inputs, analysisType));
-    } catch (error) { next(error); }
+      res.json(await callOpenRouter(workflow, inputs, analysisType, aiRequestController.signal));
+    } catch (error) { (!res.destroyed && next(error)); }
   });
   app.post('/api/ai/save', async (req, res) => {
     if (!req.body?.result) return res.status(422).json({ error: 'A completed analysis is required' });
