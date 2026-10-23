@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { mountTasks } from './tasks.mjs';
+import { mountFeaturePack, filterRecords } from './featurePack.mjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -230,6 +232,8 @@ export function createApp() {
   });
   app.use('/api', auth);
   mountOperationalRecordActions(app, { pool, config, identifier, audit });
+  mountTasks(app, { pool, audit });
+  mountFeaturePack(app, { pool, domainLabel: 'premium audit' });
   app.get('/api/app', (req, res) => res.json({ ...config, user: req.user, ai: aiStatus() , recordPermissions: recordPermissions(req.user) }));
   app.get('/api/capabilities', (req, res) => res.json({
     role: req.user.role,
@@ -300,7 +304,7 @@ export function createApp() {
   app.get('/api/workflows', (_req, res) => res.json({ items: config.workflows }));
   app.get('/api/records', async (req, res) => {
     const result = req.query.workflow ? await pool.query('SELECT * FROM workflow_cases WHERE workflow_id=$1 ORDER BY due_date', [req.query.workflow]) : await pool.query('SELECT * FROM workflow_cases ORDER BY due_date');
-    res.json({ items: result.rows });
+    res.json({ items: filterRecords(result.rows, req.query) });
   });
   app.get('/api/operations', (_req, res) => res.json({ items: config.operations }));
   app.get('/api/operation-records', async (req, res) => {
